@@ -1,0 +1,43 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   @default("STAFF") // ADMIN / MANAGER / STAFF
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Property {
+  id        Int      @id @default(autoincrement())
+  name      String
+  address   String
+  city      String?
+  state     String?
+  zip       String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  units     Unit[]
+}
+
+model Unit {
+  id          Int      @id @default(autoincrement())
+  property    Property @relation(fields: [propertyId], references: [id])
+  propertyId  Int
+  unitNumber  String
+  status      String   @default("VACANT") // VACANT / OCCUPIED / NOTICE
+  beds        Int?
+  baths       Int?
+  sqft        Int?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}

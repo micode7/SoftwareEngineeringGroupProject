@@ -1,0 +1,25 @@
+# Node / frontend / backend
+node_modules/
+dist/
+build/
+coverage/
+.npm/
+
+# Vite
+.vite/
+*.log
+
+# Env / secrets
+.env
+.env.local
+.env.*.local
+
+# Prisma
+prisma/dev.db
+prisma/migrations/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
