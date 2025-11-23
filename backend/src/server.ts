@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import propertyRouter from './routes/propertyRoutes';
 import unitRouter from './routes/unitRoutes';
+import ticketRouter from './routes/ticketRoutes';
 
 const app = express();
 
@@ -24,7 +25,10 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/properties', propertyRouter);
 app.use('/api/units', unitRouter);
 
-// TODO (Shawn / Tristan): /api/auth, /api/tenants, /api/leases, /api/tickets, etc.
+// --- Luis's Tickets Module ---
+app.use('/api/tickets', ticketRouter);
+
+// TODO (Shawn / Tristan): /api/auth, /api/tenants, /api/leases, etc.
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
