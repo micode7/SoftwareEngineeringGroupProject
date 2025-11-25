@@ -1,12 +1,52 @@
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { demoTenants } from "../demoTenants";
+import type { Tenant } from "../demoTenants";
+import { fetchTenantById } from "../services/tenantService";
+
+function getCurrentLease(tenant: Tenant | null) {
+  if (!tenant || !tenant.leases.length) return undefined;
+  return tenant.leases[tenant.leases.length - 1];
+}
+
+function daysUntil(dateStr: string | undefined) {
+  if (!dateStr) return null;
+  const today = new Date();
+  const target = new Date(dateStr);
+  const msPerDay = 1000 * 60 * 60 * 24;
+  return Math.round((target.getTime() - today.getTime()) / msPerDay);
+}
 
 function TenantDetailPage() {
   const { id } = useParams();
-  const tenantId = Number(id);
-  const tenant = demoTenants.find((t) => t.id === tenantId);
+  const [tenant, setTenant] = useState<Tenant | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  if (!tenant || !tenantId) {
+  useEffect(() => {
+    const numericId = Number(id);
+    if (!numericId || Number.isNaN(numericId)) {
+      setTenant(null);
+      setLoading(false);
+      return;
+    }
+
+    async function load() {
+      setLoading(true);
+      const t = await fetchTenantById(numericId);
+      setTenant(t ?? null);
+      setLoading(false);
+    }
+
+    load();
+  }, [id]);
+
+  const lease = getCurrentLease(tenant);
+  const daysLeft = daysUntil(lease?.endDate);
+
+  if (loading) {
+    return <p className="text-sm text-[#333333]">Loading tenant...</p>;
+  }
+
+  if (!tenant) {
     return (
       <div className="space-y-3">
         <Link
@@ -20,8 +60,6 @@ function TenantDetailPage() {
     );
   }
 
-  const currentLease = tenant.leases[tenant.leases.length - 1];
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-2">
@@ -32,12 +70,18 @@ function TenantDetailPage() {
           <p className="text-sm text-[#333333]/80">
             Unit {tenant.unitLabel || "N/A"}
           </p>
-          <p className="text-xs text-[#551900]/80 mt-1">
-            Status:{" "}
-            <span className="capitalize">
-              {currentLease?.status?.replace("_", " ") || "active"}
-            </span>
-          </p>
+          {lease && (
+            <div className="mt-1 flex items-center gap-2">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#F7D002]/20 text-[#551900] capitalize">
+                {lease.status.replace("_", " ")}
+              </span>
+              {daysLeft !== null && daysLeft >= 0 && daysLeft <= 60 && (
+                <span className="ml-4 text-xs text-[#CF4240] font-medium">
+                  Lease ending in {daysLeft} days
+                </span>
+              )}
+            </div>
+          )}
         </div>
         <Link
           to="/tenants"
@@ -60,16 +104,16 @@ function TenantDetailPage() {
 
         <div className="bg-white rounded-2xl border border-[#A1CBC9] shadow-md p-5 space-y-2">
           <h3 className="font-semibold text-sm text-[#333333]">Current lease</h3>
-          {currentLease ? (
+          {lease ? (
             <>
               <p className="text-sm text-[#333333]/80">
-                {currentLease.startDate} → {currentLease.endDate}
+                {lease.startDate} → {lease.endDate}
               </p>
               <p className="text-sm text-[#333333]/80">
-                Rent: ${currentLease.rent}
+                Rent: ${lease.rent}
               </p>
               <p className="text-sm text-[#333333]/80 capitalize">
-                Status: {currentLease.status.replace("_", " ")}
+                Status: {lease.status.replace("_", " ")}
               </p>
             </>
           ) : (
