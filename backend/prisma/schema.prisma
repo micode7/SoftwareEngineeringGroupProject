@@ -26,11 +26,15 @@ model Property {
   city      String?
   state     String?
   zip       String?
+  beds      Int?
+  baths     Int?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   units     Unit[]
 }
+
 
 model Unit {
   id          Int      @id @default(autoincrement())

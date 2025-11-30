@@ -35,11 +35,17 @@ function PropertyDetailPage() {
   if (loading && !property) return <p>Loading...</p>;
   if (!property) return <p>Property not found.</p>;
 
+  // simple unit summary for the header card
+  const totalUnits = units.length;
+  const vacantUnits = units.filter((u) => u.status === 'VACANT').length;
+  const occupiedUnits = units.filter((u) => u.status === 'OCCUPIED').length;
+
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between mb-2">
+      {/* Title / summary card */}
+      <div className="card property-detail-header">
         <div>
-          <h2 className="text-2xl font-semibold text-[#333333]">
+          <h2 className="text-xl sm:text-2xl font-semibold text-[#333333] mb-1">
             {property.name}
           </h2>
           <p className="text-sm text-[#333333]/80">
@@ -48,17 +54,54 @@ function PropertyDetailPage() {
             {property.state && `, ${property.state}`}
             {property.zip && ` ${property.zip}`}
           </p>
+
+          {/* small unit summary under the address */}
+          {totalUnits > 0 && (
+            <div className="property-summary-chips">
+              <span className="property-summary-chip property-summary-chip--total">
+                Units: <span className="property-summary-chip-count">{totalUnits}</span>
+              </span>
+              <span className="property-summary-chip property-summary-chip--vacant">
+                Vacant:{' '}
+                <span className="property-summary-chip-count">{vacantUnits}</span>
+              </span>
+              <span className="property-summary-chip property-summary-chip--occupied">
+                Occupied:{' '}
+                <span className="property-summary-chip-count">{occupiedUnits}</span>
+              </span>
+            </div>
+          )}
         </div>
-        <Link
-          to="/"
-          className="text-sm text-[#038391] hover:text-[#CF4240] font-medium"
-        >
-          ← Back to properties
-        </Link>
+
+        <div className="property-detail-header-actions">
+          <Link
+            to="/properties"
+            className="property-entry-chip-btn"
+          >
+            ← Back to Manage Properties
+          </Link>
+          <Link
+            to="/properties/all"
+            className="property-entry-chip-btn"
+          >
+            View all properties
+          </Link>
+        </div>
       </div>
 
-      <section className="bg-white rounded-2xl border border-[#A1CBC9] shadow-md p-5 md:p-6 space-y-3">
-        <h3 className="font-semibold text-sm mb-1 text-[#333333]">Units</h3>
+      {/* Units card */}
+      <section className="card property-detail-section">
+        <div className="flex items-center justify-between mb-3">
+          <div>
+            <h3 className="font-semibold text-sm mb-1 text-[#333333]">
+              Units
+            </h3>
+            <p className="text-xs text-[#551900]/80">
+              Individual units for this property with status and size.
+            </p>
+          </div>
+        </div>
+
         {units.length === 0 ? (
           <p className="text-sm text-[#551900]/70">No units yet.</p>
         ) : (

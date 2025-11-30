@@ -31,9 +31,9 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRouter);
 
 // --- Protected routes (must be logged in) ---
-app.use('/api/properties', authenticate, propertyRouter);
-app.use('/api/units', authenticate, unitRouter);
-app.use('/api/tickets', authenticate, ticketRouter);
+app.use('/api/properties', propertyRouter);
+app.use('/api/units', unitRouter);
+app.use('/api/tickets', ticketRouter);
 
 // TODO: tenants, leases, reports, etc.
 

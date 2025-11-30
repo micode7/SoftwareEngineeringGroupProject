@@ -35,53 +35,58 @@ async function main() {
   });
 
   const propertyA = await prisma.property.create({
-    data: {
-      name: 'Sunset Villas',
-      address: '123 Main St',
-      city: 'San Antonio',
-      state: 'TX',
-      zip: '78249',
-      units: {
-        create: [
-          {
-            unitNumber: '101',
-            status: 'OCCUPIED',
-            beds: 2,
-            baths: 1,
-            sqft: 850,
-          },
-          {
-            unitNumber: '102',
-            status: 'VACANT',
-            beds: 1,
-            baths: 1,
-            sqft: 650,
-          },
-        ],
-      },
+  data: {
+    name: 'Sunset Villas',
+    address: '123 Main St',
+    city: 'San Antonio',
+    state: 'TX',
+    zip: '78249',
+    beds: 2,      
+    baths: 1,
+    units: {
+      create: [
+        {
+          unitNumber: '101',
+          status: 'OCCUPIED',
+          beds: 2,
+          baths: 1,
+          sqft: 850,
+        },
+        {
+          unitNumber: '102',
+          status: 'VACANT',
+          beds: 1,
+          baths: 1,
+          sqft: 650,
+        },
+      ],
     },
-  });
+  },
+}as any);
 
-  const propertyB = await prisma.property.create({
-    data: {
-      name: 'Riverwalk Lofts',
-      address: '500 Riverwalk Ave',
-      city: 'San Antonio',
-      state: 'TX',
-      zip: '78205',
-      units: {
-        create: [
-          {
-            unitNumber: '201',
-            status: 'VACANT',
-            beds: 1,
-            baths: 1,
-            sqft: 700,
-          },
-        ],
-      },
+const propertyB = await prisma.property.create({
+  data: {
+    name: 'Riverwalk Lofts',
+    address: '500 Riverwalk Ave',
+    city: 'San Antonio',
+    state: 'TX',
+    zip: '78205',
+    beds: 1,      
+    baths: 1,     
+    units: {
+      create: [
+        {
+          unitNumber: '201',
+          status: 'VACANT',
+          beds: 1,
+          baths: 1,
+          sqft: 700,
+        },
+      ],
     },
-  });
+  },
+}as any);
+
 
   // Fetch units to create tenants
   const unit101 = await prisma.unit.findFirst({

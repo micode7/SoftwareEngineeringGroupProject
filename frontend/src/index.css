@@ -2,7 +2,1369 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-    sans-serif;
+@layer base {
+  body {
+    @apply bg-[#EEEEEE] text-[#333333];
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+      sans-serif;
+    margin: 0; /* ✅ removes the top/left gap */
+  }
+
+  a {
+    @apply no-underline;
+  }
+
+  button {
+    @apply no-underline;
+  }
+}
+
+/* ==== LeaseCRM SIDEBAR STYLES ==== */
+
+:root {
+  --sidebar-bg: #a1cbc9;
+  --text-color: #333333;
+  --card-bg: #ffffff;
+  --accent-main: #038391;
+}
+
+#sidebar {
+  width: 260px;
+  background-color: var(--sidebar-bg);
+  color: var(--text-color);
+  padding: 0rem;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 1rem 1rem 0; /* rounded */
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+
+.app-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.sidebar-toggle-btn {
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  background-color: transparent;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+}
+
+.sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+  padding: 0.45rem 0.75rem;
+  border-radius: 0.75rem;
+  color: var(--text-color);
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  font-size: 0.9rem;
+}
+
+.sidebar-link-icon {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+}
+
+.sidebar-link:hover {
+  background-color: rgba(0, 0, 0, 0.06);
+  text-decoration: none;
+}
+
+/* active state */
+.sidebar-link-active {
+  background-color: rgba(255, 255, 255, 0.75);
+}
+
+/* theme / footer area (optional) */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(0, 0, 0, 0.15);
+  font-size: 1rem;
+}
+
+/* collapsed behavior (we'll hook this up later if you want) */
+body.sidebar-collapsed #sidebar {
+  width: 72px;
+  padding-inline: 0.5rem;
+}
+
+body.sidebar-collapsed #sidebar .app-title,
+body.sidebar-collapsed #sidebar .sidebar-footer,
+body.sidebar-collapsed #sidebar .sidebar-link-text {
+  display: none;
+}
+
+body.sidebar-collapsed #sidebar .sidebar-header {
+  justify-content: center;
+}
+
+body.sidebar-collapsed #sidebar .sidebar-link {
+  text-align: center;
+  padding-inline: 0.25rem;
+}
+
+/* ==== MAIN CONTENT & CARDS FOR DASHBOARD ==== */
+
+/* optional container if you want a main-content wrapper later */
+#main-content {
+  flex: 1;
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
+
+/* Card grid pattern for future widgets */
+.home-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(240px, 1fr));
+  grid-auto-rows: minmax(160px, auto);
+  gap: 1.5rem;
+}
+
+@media (max-width: 900px) {
+  .home-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Generic card style (we'll reuse this everywhere) */
+.card {
+  background-color: var(--card-bg);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+
+.card h3 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+/* Page title inside a card */
+.page-title {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+/* ==== DASHBOARD ACTION BUTTONS ==== */
+
+/* Row wrapper for quick actions */
+.dash-actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  margin-top: 0.75rem;
+  gap: 0.75rem;
+}
+
+/* Big rounded pill buttons */
+.dash-secondary-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  border-radius: 999px;
+  padding: 0.6rem 1.8rem;          /* taller + wider */
+  border: none;
+  background-color: var(--accent-main);
+  color: #ffffff;
+  font-size: 0.9rem;               /* you can bump to 1rem if you want */
+  font-weight: 600;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* small spacing if stacked without flex gap (kept, just in case) */
+.dash-secondary-btn + .dash-secondary-btn {
+  margin-left: 0.5rem;
+}
+
+.dash-secondary-btn:hover {
+  filter: brightness(1.05);
+}
+
+/* Extra vertical spacing between Overview card and the grid */
+.dashboard-grid {
+  margin-top: 1rem; /* bump this up/down to taste */
+}
+
+
+/* Search block takes more space */
+.dash-search-block {
+  flex: 0 0 340px;
+}
+
+/* Search input styling (rounded) */
+.dash-search-block input[type="text"] {
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0.4rem 0.75rem;
+  background-color: #ffffff;   /* you can swap to var(--card-bg) if you want */
+  color: #333333;              /* or var(--text-color) */
+  outline: none;
+}
+
+/* Optional: nicer focus state */
+.dash-search-block input[type="text"]:focus {
+  border-color: #038391;
+  box-shadow: 0 0 0 2px rgba(3, 131, 145, 0.25);
+}
+
+/* === Rounded form fields (shared style) === */
+
+/* Generic rounded field (text, number, etc.) */
+.crm-field {
+  width: 100%;
+  border-radius: 999px; /* big pill */
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0.4rem 0.75rem;
+  background-color: var(--card-bg);
+  color: var(--text-color);
+  box-sizing: border-box;
+  outline: none;
+  margin-top: 0.25rem;   /* you can bump to 0.5rem if you want more space */
+  margin-bottom: 0.3rem;
+}
+
+/* Focus state to match your palette */
+.crm-field:focus {
+  border-color: #038391;
+  box-shadow: 0 0 0 2px rgba(3, 131, 145, 0.25);
+}
+
+/* === Primary rounded action button === */
+.crm-primary-btn {
+  margin-top: 1rem;                 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+
+  padding: 0.5rem 1.2rem;           
+  border-radius: 999px;
+  border: none;
+
+  background-color: #038391;
+  color: #ffffff;                   
+  font-size: 0.95rem;
+  font-weight: 600;
+
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.crm-primary-btn:hover {
+  background-color: #068460;
+  filter: brightness(1.03);
+}
+
+
+/* === Property list cards (inside the "Current properties" card) === */
+
+.property-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Base card per property (similar to entry-card) */
+.property-entry-card {
+  border-radius: 1rem;
+  background-color: var(--card-bg);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header band: name + subtitle on left, pill on right */
+.property-entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 0.9rem;
+  background-color: var(--sidebar-bg);
+}
+
+/* Left stack (name + small line) */
+.property-entry-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.property-entry-name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+.property-entry-subtitle {
+  font-size: 0.75rem;
+  color: rgba(51, 51, 51, 0.8);
+}
+
+/* Right pill for units */
+.property-entry-pill {
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.85);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #551900;
+  white-space: nowrap;
+}
+
+/* Body area: address + meta */
+.property-entry-body {
+  padding: 0.75rem 0.9rem 0.5rem 0.9rem;
+  font-size: 0.8rem;
+  color: #333333;
+}
+
+.property-entry-address {
+  font-size: 0.8rem;
+  color: rgba(51, 51, 51, 0.9);
+}
+
+.property-entry-meta {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  color: rgba(51, 51, 51, 0.75);
+}
+
+/* Footer row: View details link aligned right */
+.property-entry-footer {
+  padding: 0 0.9rem 0.7rem 0.9rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.property-entry-link {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #038391;
+  text-decoration: none;
+}
+
+.property-entry-link:hover {
+  text-decoration: underline;
+}
+
+
+/* === Property list toolbar / actions === */
+
+/* Container holding "View all" on the right */
+.property-list-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Small pill button/link (e.g., 'View all properties') */
+.crm-ghost-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(3, 131, 145, 0.4);
+  background-color: rgba(255, 255, 255, 0.9);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #038391;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.crm-ghost-pill:hover {
+  background-color: rgba(3, 131, 145, 0.06);
+}
+
+/* Footer row now holds multiple actions */
+.property-entry-footer {
+  padding: 0 0.9rem 0.7rem 0.9rem;
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Row for View / Edit / Delete */
+.property-entry-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Tiny chip buttons for edit/delete */
+.property-entry-chip-btn {
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  padding: 0.15rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  background-color: #ffffff;
+  color: #333333;
+  cursor: pointer;
+}
+
+.property-entry-chip-btn--danger {
+  border-color: rgba(203, 44, 49, 0.5);
+  color: #8b0e04;
+}
+
+.property-entry-chip-btn:hover {
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+.property-entry-chip-btn--danger:hover {
+  background-color: rgba(203, 44, 49, 0.06);
+}
+
+/* Existing view link still ok */
+.property-entry-link {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #038391;
+  text-decoration: none;
+}
+
+.property-entry-link:hover {
+  text-decoration: underline;
+}
+
+/* ==== Modal for editing properties (AllPropertiesPage) ==== */
+
+.crm-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 40;
+}
+
+.crm-modal {
+  width: 100%;
+  max-width: 480px;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.crm-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.crm-modal-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+.crm-modal-body {
+  margin-top: 0.25rem;
+}
+
+.crm-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+
+/* ==== Property detail header + summary chips ==== */
+
+.property-detail-header-card {
+  margin-bottom: 2rem; /* ✅ creates a clear gap before the Units card */
+}
+
+/* row that holds the little "chips" (Units / Vacant / Occupied) */
+.property-summary-chips {
+  margin-top: 1rem;
+  margin-bottom:1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  font-size: 0.75rem; /* ~text-xs */
+  color: rgba(51, 51, 51, 0.8); /* #333333/80 */
+}
+
+/* base chip style */
+.property-summary-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.6rem;
+}
+
+/* little bold count number inside chips */
+.property-summary-chip-count {
+  margin-left: 0.25rem;
+  font-weight: 600;
+}
+
+
+
+/* specific chip colors to match your palette */
+.property-summary-chip--total {
+  background-color: rgba(161, 203, 201, 0.4); /* #A1CBC9/40 */
+}
+
+.property-summary-chip--vacant {
+  background-color: rgba(247, 208, 2, 0.25); /* #F7D002/25 */
+}
+
+.property-summary-chip--occupied {
+  background-color: rgba(3, 131, 145, 0.10); /* #038391/10 */
+}
+
+
+/* ==== Property detail header card layout ==== */
+
+.property-detail-header {
+  /* replaces: mx-3 mt-3 mb-6 */
+  margin-top: 0.75rem;          /* mt-3 */
+  margin-right: 0.75rem;        /* mx-3 */
+  margin-left: 0.75rem;
+  margin-bottom: 1rem;          /* a bit bigger gap before Units card */
+
+  /* replaces: flex flex-col gap-3 */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;                  /* gap-3 */
+}
+
+/* replaces: sm:flex-row sm:items-center sm:justify-between */
+@media (min-width: 640px) {
+  .property-detail-header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* ==== Property detail content cards (e.g., Units) ==== */
+
+.property-detail-section {
+  /* match horizontal margins with header card */
+  margin-left: 0.75rem;   /* same as mx-3 */
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;  /* a bit smaller gap than the header if you like */
+
+  /* full-width card within the content column */
+  display: block;
+}
+
+/* Buttons container in the property detail header card */
+.property-detail-header-actions {
+  display: flex;
+  gap: 0.5rem;
+  
+  /* ⬆️ put the buttons in the top-right corner of the card */
+  align-self: flex-start;
+}
+
+/* Make the header chip buttons bigger than the list chips */
+.property-detail-header-actions .property-entry-chip-btn {
+  padding: 0.3rem .8rem;    /* ⬅️ taller + wider */
+  font-size: 0.9rem;          /* a bit larger text */
+  border-radius: 999px;       /* keep pill look */
+}
+
+
+/* ==== Maintenance Tickets page ==== */
+
+/* Title / filter card */
+.tickets-header-card {
+  margin-top: 0.75rem;     /* mt-3 */
+  margin-left: 0.75rem;    /* mx-3 */
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tickets-header-main {
+  flex: 1;
+}
+
+.tickets-header-title {
+  font-size: 1.25rem;      /* ~text-xl */
+  font-weight: 600;
+  color: #333333;
+  margin: 0 0 0.25rem 0;
+}
+
+.tickets-header-subtitle {
+  font-size: 0.875rem;
+  color: rgba(85, 25, 0, 0.8); /* #551900/80 */
+  margin: 0;
+}
+
+.tickets-header-filter {
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (min-width: 640px) {
+  .tickets-header-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tickets-header-filter {
+    justify-content: flex-end;
+  }
+}
+
+.tickets-filter-select {
+  border-radius: 999px;
+  border: 1px solid #A1CBC9;
+  padding: 0.4rem 1.25rem;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 0.85rem;
+  outline: none;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+/* Ticket list card wrapper */
+.tickets-list-section {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.tickets-empty-text {
+  font-size: 0.875rem;
+  color: rgba(51, 51, 51, 0.8);
+}
+
+/* Ticket cards grid (vertical stack) */
+.tickets-list-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Single ticket card */
+.ticket-card {
+  border-radius: 1rem;
+  border: 2px solid #A1CBC9;
+  background-color: #ffffff;
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  transition:
+    box-shadow 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.1s ease;
+}
+
+.ticket-card:hover {
+  border-color: #038391;
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.18);
+  transform: translateY(-1px);
+}
+
+/* Top row: title / badges */
+.ticket-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .ticket-card-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.ticket-card-title-block {
+  max-width: 100%;
+}
+
+.ticket-card-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+.ticket-card-subtext {
+  margin: 0.1rem 0;
+  font-size: 0.75rem;
+  color: rgba(51, 51, 51, 0.7);
+}
+
+.ticket-card-subtext-strong {
+  font-weight: 600;
+}
+
+/* Status / priority chips row */
+.ticket-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-start;
+}
+
+@media (min-width: 640px) {
+  .ticket-card-badges {
+    justify-content: flex-end;
+  }
+}
+
+/* Base chip style, with Tailwind utilities layering colors */
+.ticket-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.25rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Description text (optional 3-line clamp) */
+.ticket-card-description {
+  font-size: 0.875rem;
+  color: rgba(51, 51, 51, 0.8);
+  margin-top: 0.25rem;
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+/* Bottom meta row */
+.ticket-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: rgba(51, 51, 51, 0.7);
+  margin-top: 0.25rem;
+}
+
+@media (min-width: 640px) {
+  .ticket-card-meta {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+
+/* ==== Tenants page ==== */
+
+/* Title / search card */
+.tenants-header-card {
+  margin-top: 0.75rem;      /* mt-3 */
+  margin-left: 0.75rem;     /* mx-3 */
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tenants-header-main {
+  flex: 1;
+}
+
+.tenants-header-title {
+  font-size: 1.25rem;       /* ~text-xl */
+  font-weight: 600;
+  color: #333333;
+  margin: 0 0 0.25rem 0;
+}
+
+.tenants-header-subtitle {
+  font-size: 0.875rem;
+  color: rgba(85, 25, 0, 0.8); /* #551900/80 */
+  margin: 0;
+}
+
+.tenants-header-search {
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (min-width: 640px) {
+  .tenants-header-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tenants-header-search {
+    justify-content: flex-end;
+  }
+}
+
+/* Rounded search pill */
+.tenants-search-input {
+  border-radius: 999px;
+  border: 1px solid #A1CBC9;
+  padding: 0.45rem 1.1rem;
+  background-color: #ffffff;
+  color: #333333;
+  font-size: 0.85rem;
+  outline: none;
+  min-width: 0;
+  width: 100%;
+  max-width: 260px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.tenants-search-input:focus {
+  border-color: #038391;
+  box-shadow: 0 0 0 2px rgba(3, 131, 145, 0.25);
+}
+
+/* Table card wrapper */
+.tenants-table-section {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.tenants-empty-text {
+  font-size: 0.875rem;
+  color: rgba(51, 51, 51, 0.8);
+}
+
+/* Table shell */
+.tenants-table-wrapper {
+  overflow-x: auto;
+  border-radius: 1rem;
+  border: 1px solid #EEEEEE;
+  background-color: #ffffff;
+}
+
+.tenants-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+/* Header row */
+.tenants-table-head {
+  background-color: rgba(161, 203, 201, 0.3); /* #A1CBC9/30 */
+}
+
+.tenants-table-head tr {
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-size: 0.75rem;
+  color: #4b5563; /* gray-600-ish */
+}
+
+.tenants-table-header-cell {
+  padding: 0.65rem 1rem;
+}
+
+/* Body rows */
+.tenants-table-row {
+  border-top: 1px solid #EEEEEE;
+}
+
+.tenants-table-row:nth-child(even) {
+  background-color: rgba(161, 203, 201, 0.1); /* #A1CBC9/10 */
+}
+
+.tenants-table-cell {
+  padding: 0.6rem 1rem;
+}
+
+/* "No tenants" row */
+.tenants-table-empty-row {
+  padding: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: rgba(85, 25, 0, 0.7);
+}
+
+/* Status pill */
+.tenants-status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: rgba(247, 208, 2, 0.2); /* #F7D002/20 */
+  color: #551900;
+}
+
+/* "no lease" text */
+.tenants-no-lease-text {
+  font-size: 0.75rem;
+  color: rgba(85, 25, 0, 0.7);
+}
+
+/* Details button in table */
+.tenants-action-btn {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.35rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  background-color: #038391;
+  color: #ffffff;
+  text-decoration: none;
+  transition:
+    background-color 0.15s ease,
+    transform 0.1s ease,
+    box-shadow 0.15s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.tenants-action-btn:hover {
+  background-color: #CF4240;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.18);
+}
+
+
+/* ==== Tenant detail page ==== */
+
+.tenant-detail-loading {
+  font-size: 0.875rem;
+  color: #333333;
+  margin: 0.75rem;
+}
+
+.tenant-detail-notfound {
+  margin: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.tenant-detail-error {
+  font-size: 0.875rem;
+  color: #dc2626; /* red-600-ish */
+}
+
+/* Header card with gap below */
+.tenant-detail-header-card {
+  margin-top: 0.75rem;     /* mt-3 */
+  margin-left: 0.75rem;    /* mx-3 */
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;   /* creates gap before info grid */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.tenant-detail-header-main {
+  flex: 1;
+}
+
+.tenant-detail-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333333;
+  margin: 0 0 0.1rem 0;
+}
+
+.tenant-detail-subtitle {
+  font-size: 0.875rem;
+  color: rgba(51, 51, 51, 0.8);
+  margin: 0;
+}
+
+.tenant-detail-status-row {
+  margin-top: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* status pill, similar to other chips */
+.tenant-detail-status-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0.2rem 0.9rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: rgba(247, 208, 2, 0.2); /* #F7D002/20 */
+  color: #551900;
+}
+
+.tenant-detail-lease-warning {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #CF4240;
+}
+
+.tenant-detail-header-actions {
+  display: flex;
+  justify-content: flex-start;
+}
+
+@media (min-width: 640px) {
+  .tenant-detail-header-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .tenant-detail-header-actions {
+    justify-content: flex-end;
+  }
+}
+
+/* Back link styling */
+.tenant-detail-backlink {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #038391;
+  text-decoration: none;
+}
+
+.tenant-detail-backlink:hover {
+  color: #CF4240;
+}
+
+/* Info cards grid under header */
+.tenant-detail-grid {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .tenant-detail-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.tenant-detail-info-card {
+  /* .card already gives radius, padding, shadow */
+  min-height: 0;
+}
+
+.tenant-detail-info-title {
+  margin: 0 0 0.5rem 0;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+.tenant-detail-info-text {
+  margin: 0.15rem 0;
+  font-size: 0.875rem;
+  color: rgba(51, 51, 51, 0.85);
+}
+
+.tenant-detail-info-label {
+  font-weight: 600;
+}
+
+.tenant-detail-no-lease {
+  color: rgba(85, 25, 0, 0.7); /* #551900/70 */
+}
+
+
+/* Overview card: centered under header, consistent width with other pages */
+.dashboard-overview-card {
+  /* same horizontal feel as other pages using mx-3 */
+  margin-top: 0.75rem;      /* mt-3 */
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;    /* extra gap before grid */
+}
+
+/* Dashboard 2×2 grid */
+.dashboard-grid {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  margin-bottom: 0.75rem;
+  width: calc(100% - 1.5rem);     /* full width of main area minus margins */
+  max-width: none;                /* ✅ let it stretch */
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-auto-rows: minmax(180px, auto);
+  gap: 1.25rem;
+}
+
+/* stack to single column on smaller screens */
+@media (max-width: 900px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* Page wrapper to keep spacing consistent with other screens */
+.crm-page {
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  padding: 0.75rem 0 1.5rem;
+}
+
+/* Header card width & centering */
+.crm-page-header-card {
+  margin: 0.75rem auto 1.75rem;
+}
+
+/* Reusable 2×2 grid layout (fills main width, respects max) */
+.crm-grid-2x2 {
+  margin: 0 0 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(260px, 1fr));
+  grid-auto-rows: minmax(220px, auto);
+  gap: 1.5rem;
+  padding-inline: 0.25rem;
+}
+
+@media (max-width: 900px) {
+  .crm-grid-2x2 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Keep your existing .card, .property-entry-*, .crm-field, .crm-primary-btn, etc. */
+
+/* Header card width & centering (already added earlier) */
+.crm-page-header-card {
+  margin-top: 0.75rem;      /* mt-3 */
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Single-column list page wrapper (like All Properties) */
+.crm-page-list {
+    margin-top: 0.75rem;      /* mt-3 */
+  margin-left: 0.75rem;
+  margin-right: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+/* === All Properties filters card === */
+.crm-filter-card {
+  /* uses .card + .crm-page-list */
+}
+
+/* header row inside the filter card */
+.crm-filter-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-bottom: 0.75rem;
+}
+
+/* row for the three filters */
+.crm-filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-end;
+}
+
+/* each block (search / state / min beds) */
+.crm-filter-block {
+  flex: 1 1 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-right: .9rem;
+  margin-left: .1rem;
+}
+
+/* slightly smaller for the side filters if space is tight */
+.crm-filter-block--sm {
+  flex: 0 0 180px;
+}
+
+.crm-filter-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* shared rounded pill look for inputs & selects */
+.crm-filter-input,
+.crm-filter-select {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  padding: 0.4rem 0.75rem;
+  font-size: 0.875rem;
+  background-color: #ffffff;
+  color: var(--text-color);
+  outline: none;
+}
+
+.crm-filter-input:focus,
+.crm-filter-select:focus {
+  border-color: #038391;
+  box-shadow: 0 0 0 2px rgba(3, 131, 145, 0.28);
+}
+
+@media (max-width: 640px) {
+  .crm-filter-row {
+    align-items: stretch;
+  }
+  .crm-filter-block,
+  .crm-filter-block--sm {
+    flex: 1 1 100%;
+  }
+}
+
+
+
+/* === AUTH / LOGIN LAYOUT === */
+
+.crm-auth-shell {
+  flex-direction: column;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 1.5rem;
+  background-color: #eeeeee;
+  margin-left: 1.5rem;
+  margin-right: 1.5rem;
+}
+
+/* main login card */
+.crm-auth-card {
+  width: 100%;
+  max-width: none;
+  border-radius: 1.5rem;
+  background-color: #ffffff;
+  border: 2px solid #a1cbc9;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.18);
+  padding: 1.75rem 1.75rem 1.5rem;
+}
+
+/* header row with logo + text */
+.crm-auth-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* small LL pill */
+.crm-auth-logo-pill {
+  height: 2.25rem;
+  width: 2.25rem;
+  border-radius: 999px;
+  background-color: rgba(3, 131, 145, 0.1);
+  color: #038391;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+/* title + subtitle */
+.crm-auth-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #333333;
+  margin: 0;
+}
+
+.crm-auth-subtitle {
+  font-size: 0.8rem;
+  color: rgba(85, 25, 0, 0.8);
+  margin-top: 0.2rem;
+}
+
+/* demo hint text */
+.crm-auth-hint {
+  font-size: 0.78rem;
+  color: rgba(51, 51, 51, 0.8);
+  margin-top: 0.5rem;
+  margin-bottom: 0.9rem;
+}
+
+/* form spacing */
+.crm-auth-form {
+  margin-top: 0.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* label style that matches rest of app */
+.crm-field-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #333333;
+}
+
+/* rounded input pill (if not already defined, otherwise this reinforces it) */
+.crm-field {
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 1px solid rgba(0, 0, 0, 0.18);
+  padding: 0.5rem 0.8rem;
+  font-size: 0.875rem;
+  background-color: #ffffff;
+  color: var(--text-color);
+  outline: none;
+}
+
+.crm-field:focus {
+  border-color: #038391;
+  box-shadow: 0 0 0 2px rgba(3, 131, 145, 0.25);
+}
+
+/* primary pill button reused from rest of app if you have it;
+   here we just ensure it stretches full width */
+.crm-auth-submit-btn {
+  width: 100%;
+  justify-content: center;
+  margin-top: 0.5rem;
 }

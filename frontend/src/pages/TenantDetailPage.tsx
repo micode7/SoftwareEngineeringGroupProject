@@ -41,83 +41,90 @@ function TenantDetailPage() {
 
   const lease = getCurrentLease(tenant);
   const daysLeft = daysUntil(lease?.endDate);
+  const showLeaseWarning =
+    daysLeft !== null && daysLeft >= 0 && daysLeft <= 60;
 
   if (loading) {
-    return <p className="text-sm text-[#333333]">Loading tenant...</p>;
+    return <p className="tenant-detail-loading">Loading tenant...</p>;
   }
 
   if (!tenant) {
     return (
-      <div className="space-y-3">
-        <Link
-          to="/tenants"
-          className="text-sm text-[#038391] hover:text-[#CF4240] font-medium"
-        >
+      <div className="tenant-detail-notfound">
+        <Link to="/tenants" className="tenant-detail-backlink">
           ← Back to tenants
         </Link>
-        <p className="text-sm text-red-600">Tenant not found.</p>
+        <p className="tenant-detail-error">Tenant not found.</p>
       </div>
     );
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between mb-2">
-        <div>
-          <h2 className="text-2xl font-semibold text-[#333333]">
-            {tenant.name}
-          </h2>
-          <p className="text-sm text-[#333333]/80">
+    <div>
+      {/* Header card */}
+      <div className="card tenant-detail-header-card">
+        <div className="tenant-detail-header-main">
+          <h2 className="tenant-detail-title">{tenant.name}</h2>
+          <p className="tenant-detail-subtitle">
             Unit {tenant.unitLabel || "N/A"}
           </p>
+
           {lease && (
-            <div className="mt-1 flex items-center gap-2">
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-[#F7D002]/20 text-[#551900] capitalize">
+            <div className="tenant-detail-status-row">
+              <span className="tenant-detail-status-pill">
                 {lease.status.replace("_", " ")}
               </span>
-              {daysLeft !== null && daysLeft >= 0 && daysLeft <= 60 && (
-                <span className="ml-4 text-xs text-[#CF4240] font-medium">
+              {showLeaseWarning && (
+                <span className="tenant-detail-lease-warning">
                   Lease ending in {daysLeft} days
                 </span>
               )}
             </div>
           )}
         </div>
-        <Link
-          to="/tenants"
-          className="text-sm text-[#038391] hover:text-[#CF4240] font-medium"
-        >
-          ← Back to tenants
-        </Link>
+
+        <div className="tenant-detail-header-actions">
+          <Link to="/tenants" className="tenant-detail-backlink">
+            ← Back to tenants
+          </Link>
+        </div>
       </div>
 
-      <section className="grid gap-4 md:grid-cols-2">
-        <div className="bg-white rounded-2xl border border-[#A1CBC9] shadow-md p-5 space-y-2">
-          <h3 className="font-semibold text-sm text-[#333333]">Contact</h3>
-          <p className="text-sm text-[#333333]/80">
-            Email: {tenant.email || "n/a"}
+      {/* Info cards grid */}
+      <section className="tenant-detail-grid">
+        <div className="card tenant-detail-info-card">
+          <h3 className="tenant-detail-info-title">Contact</h3>
+          <p className="tenant-detail-info-text">
+            <span className="tenant-detail-info-label">Email:</span>{" "}
+            {tenant.email || "n/a"}
           </p>
-          <p className="text-sm text-[#333333]/80">
-            Phone: {tenant.phone || "n/a"}
+          <p className="tenant-detail-info-text">
+            <span className="tenant-detail-info-label">Phone:</span>{" "}
+            {tenant.phone || "n/a"}
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl border border-[#A1CBC9] shadow-md p-5 space-y-2">
-          <h3 className="font-semibold text-sm text-[#333333]">Current lease</h3>
+        <div className="card tenant-detail-info-card">
+          <h3 className="tenant-detail-info-title">Current lease</h3>
           {lease ? (
             <>
-              <p className="text-sm text-[#333333]/80">
+              <p className="tenant-detail-info-text">
+                <span className="tenant-detail-info-label">Dates:</span>{" "}
                 {lease.startDate} → {lease.endDate}
               </p>
-              <p className="text-sm text-[#333333]/80">
-                Rent: ${lease.rent}
+              <p className="tenant-detail-info-text">
+                <span className="tenant-detail-info-label">Rent:</span>{" "}
+                ${lease.rent}
               </p>
-              <p className="text-sm text-[#333333]/80 capitalize">
-                Status: {lease.status.replace("_", " ")}
+              <p className="tenant-detail-info-text">
+                <span className="tenant-detail-info-label">Status:</span>{" "}
+                {lease.status.replace("_", " ")}
               </p>
             </>
           ) : (
-            <p className="text-sm text-[#551900]/70">No active lease on file.</p>
+            <p className="tenant-detail-info-text tenant-detail-no-lease">
+              No active lease on file.
+            </p>
           )}
         </div>
       </section>

@@ -1,83 +1,87 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import type { FormEvent } from 'react';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
 
-const LoginPage: React.FC = () => {
+function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation() as any;
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [email, setEmail] = useState('admin@leaselink.com');
+  const [password, setPassword] = useState('demo123');
+  const [loading, setLoading] = useState(false);
 
-  const from = location.state?.from?.pathname || '/';
-
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null);
-    setSubmitting(true);
+    setLoading(true);
     try {
       await login(email, password);
-      navigate(from, { replace: true });
-    } catch (err: any) {
-      console.error(err);
-      const message =
-        err?.response?.data?.message || 'Invalid email or password';
-      setError(message);
+      navigate('/'); // send them to Overview after login
+    } catch (err) {
+      console.error('Login failed', err);
+      alert('Login failed – check email or try again.');
     } finally {
-      setSubmitting(false);
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-100">
-      <div className="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
-        <h1 className="text-2xl font-semibold mb-4 text-slate-800">
-          LeaseLink Login
-        </h1>
-        <p className="text-sm text-slate-500 mb-4">
-          Sign in to manage properties, tenants, and tickets.
+    <div className="crm-auth-shell">
+      <div className="crm-auth-card">
+        {/* Title section (matches app vibe) */}
+        <div className="crm-auth-header">
+          <div className="crm-auth-logo-pill">LL</div>
+          <div>
+            <h1 className="crm-auth-title">LeaseLink CRM</h1>
+            <p className="crm-auth-subtitle">
+              Sign in to access your properties and maintenance workspace.
+            </p>
+          </div>
+        </div>
+
+        {/* Demo hint */}
+        <p className="crm-auth-hint">
+          Demo login:&nbsp;
+          <span className="font-mono">admin@leaselink.com</span> with any
+          non-empty password (e.g. <span className="font-mono">demo123</span>).
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Email
-            </label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-indigo-200"
-              required
-            />
+        {/* Form card body */}
+        <form className="crm-auth-form" onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <div className="space-y-1">
+              <label className="crm-field-label">Email</label>
+              <input
+                className="crm-field"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="you@example.com"
+              />
+            </div>
+
+            <div className="space-y-1">
+              <label className="crm-field-label">Password</label>
+              <input
+                type="password"
+                className="crm-field"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+            </div>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-slate-700 mb-1">
-              Password
-            </label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-slate-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring focus:ring-indigo-200"
-              required
-            />
-          </div>
-          {error && <div className="text-sm text-red-600">{error}</div>}
+
           <button
             type="submit"
-            disabled={submitting}
-            className="w-full bg-indigo-600 text-white rounded-md py-2 text-sm font-medium hover:bg-indigo-700 disabled:opacity-60"
+            disabled={loading}
+            className="crm-primary-btn crm-auth-submit-btn"
           >
-            {submitting ? 'Signing in...' : 'Sign in'}
+            {loading ? 'Logging in…' : 'Login'}
           </button>
         </form>
       </div>
     </div>
   );
-};
+}
 
 export default LoginPage;
